@@ -1,0 +1,37 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2636
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw10320\paperh14580\margl1440\margr1440\vieww28300\viewh14520\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 \
+\
+-- a) How many orders were shipped by Speedy Express in total?\
+\
+CREATE VIEW Shipper_Orders AS SELECT Orders.OrderID, Orders.ShipperID, Shippers.ShipperName FROM Orders JOIN Shippers ON Shippers.ShipperID=Orders.ShipperID;\
+\
+SELECT COUNT(*) FROM [Shipper_Orders] WHERE ShipperName = 'Speedy Express';\
+\
+ANSWER: 54\
+\
+-- b) What is the last name of the employee with the most orders?\
+\
+CREATE VIEW Employee_Orders AS SELECT Orders.EmployeeID, Employees.LastName, Orders.OrderID FROM Orders JOIN Employees ON Employees.EmployeeID=Orders.EmployeeID;\
+\
+SELECT LastName, COUNT() FROM Employee_Orders GROUP BY LastName ORDER BY COUNT() desc;\
+\
+ANSWER: Peacock, 40\
+\
+-- c) What product was ordered the most by customers in Germany?\
+\
+CREATE VIEW Products_Ordered AS SELECT Orders.OrderID, Customers.Country, OrderDetails.Quantity, Products.ProductName FROM Orders, OrderDetails JOIN Customers ON Orders.CustomerID=Customers.CustomerID JOIN Products ON OrderDetails.ProductID=Products.ProductID WHERE Country='Germany';\
+\
+CREATE VIEW Product_Orders AS SELECT ProductName, Quantity, COUNT(*) as 'Orders' FROM Products_Ordered GROUP BY ProductName;\
+\
+SELECT ProductName, Quantity, Orders, (Quantity * Orders) AS TotalOrdered FROM Product_Orders ORDER BY TotalOrdered desc LIMIT 1;\
+\
+Answer:\
+\
+ProductName - Camembert Pierrot Quantity - 40 Orders - 300 TotalOrdered - 12000\
+}
